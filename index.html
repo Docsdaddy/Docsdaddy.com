@@ -1,11 +1,9 @@
-  
-    
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocsDaddy-Your Free Online Digital Swiss Army Knife</title>
+    <title>DocsDaddy - Your Free Online Digital Swiss Army Knife</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
@@ -32,6 +30,7 @@
             background-color: var(--bg-gray);
             color: var(--text-dark);
             line-height: 1.6;
+            scroll-behavior: smooth;
         }
         
         .container {
@@ -180,6 +179,7 @@
         
         .search-container {
             padding: 0 20px;
+            position: relative;
         }
         
         .search-bar {
@@ -382,6 +382,10 @@
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            z-index: 100;
         }
 
         .search-results h3 {
@@ -406,10 +410,50 @@
             color: var(--text-dark);
             text-decoration: none;
             transition: var(--transition);
+            display: block;
+            padding: 5px 0;
         }
 
         .search-results ul li a:hover {
             color: var(--primary-blue);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            z-index: 99;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 20px;
+        }
+
+        .mobile-nav ul li {
+            margin-bottom: 15px;
+        }
+
+        .mobile-nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: block;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .mobile-nav ul li:last-child a {
+            border-bottom: none;
         }
         
         /* Responsive */
@@ -431,8 +475,8 @@
                 gap: 15px;
             }
             
-            nav ul {
-                gap: 15px;
+            nav.desktop-nav {
+                display: none;
             }
             
             .hero {
@@ -458,16 +502,17 @@
             .section-header h2 {
                 font-size: 1.5rem;
             }
+
+            .search-results {
+                position: relative;
+                margin-top: 15px;
+            }
         }
         
         @media (max-width: 576px) {
             .header-container {
                 flex-direction: row;
                 justify-content: space-between;
-            }
-            
-            nav {
-                display: none;
             }
             
             .contact-email {
@@ -512,7 +557,7 @@
         <div class="container header-container">
             <a href="#" class="logo">Docs<span>Daddy</span></a>
             
-            <nav>
+            <nav class="desktop-nav">
                 <ul>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#tools">Tools</a></li>
@@ -525,10 +570,19 @@
                 <span>docsdaddy08@gmail.com</span>
             </div>
             
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav" id="mobileNav">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
     </header>
     
     <!-- Hero Section -->
@@ -1061,135 +1115,4 @@
                     <div class="tool-icon-container">
                         <i class="fas fa-globe"></i>
                     </div>
-                    <h3>Time Zone Converter</h3>
-                    <p>Convert times between different time zones</p>
-                    <a href="#" class="tool-button">Use Tool</a>
-                </div>
-                
-                <div class="tool-card">
-                    <div class="tool-icon-container">
-                        <i class="fas fa-random"></i>
-                    </div>
-                    <h3>Random Number/Password Generator</h3>
-                    <p>Generate secure random numbers and passwords</p>
-                    <a href="#" class="tool-button">Use Tool</a>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-about">
-                    <a href="#" class="footer-logo">Docs<span>Daddy</span></a>
-                    <p>Simplifying Your Digital Life with Free Powerful, Easy-to-Use Tools for all Your Needs.</p>
-                </div>
-                
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-envelope"></i> docsdaddy08@gmail.com</p>
-                </div>
-                
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#tools">All Tools</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Use</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2023 DocsDady. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-    
-    <script>
-        // Mobile menu toggle functionality
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            const nav = document.querySelector('nav');
-            nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
-        });
-        
-        // Search functionality
-        document.getElementById('searchButton').addEventListener('click', function() {
-            performSearch();
-        });
-        
-        // Also search when Enter key is pressed
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
-        
-        function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const resultsContainer = document.getElementById('searchResults');
-            const resultsList = document.getElementById('resultsList');
-            
-            // Clear previous results
-            resultsList.innerHTML = '';
-            
-            if (searchTerm.trim() === '') {
-                resultsContainer.style.display = 'none';
-                return;
-            }
-            
-            // Get all tool cards
-            const toolCards = document.querySelectorAll('.tool-card');
-            let foundResults = false;
-            
-            toolCards.forEach(card => {
-                const toolName = card.querySelector('h3').textContent.toLowerCase();
-                const toolDesc = card.querySelector('p').textContent.toLowerCase();
-                
-                if (toolName.includes(searchTerm) || toolDesc.includes(searchTerm)) {
-                    foundResults = true;
-                    const listItem = document.createElement('li');
-                    const link = document.createElement('a');
-                    link.href = '#' + card.closest('.tools-section').id;
-                    link.textContent = toolName;
-                    link.onclick = function() {
-                        // Scroll to the tool section
-                        card.scrollIntoView({ behavior: 'smooth' });
-                        // Highlight the card
-                        card.style.boxShadow = '0 0 0 3px var(--primary-blue)';
-                        setTimeout(() => {
-                            card.style.boxShadow = 'var(--shadow)';
-                        }, 2000);
-                        resultsContainer.style.display = 'none';
-                    };
-                    listItem.appendChild(link);
-                    resultsList.appendChild(listItem);
-                }
-            });
-            
-            if (foundResults) {
-                resultsContainer.style.display = 'block';
-            } else {
-                const listItem = document.createElement('li');
-                listItem.textContent = 'No tools found matching your search.';
-                resultsList.appendChild(listItem);
-                resultsContainer.style.display = 'block';
-            }
-        }
-        
-        // Close search results when clicking outside
-        document.addEventListener('click', function(event) {
-            const searchContainer = document.querySelector('.search-container');
-            if (!searchContainer.contains(event.target)) {
-                document.getElementById('searchResults').style.display = 'none';
-            }
-        });
-    </script>
-</body>
-</html>
-
-  
-  
+                    <h3>Time Zone
