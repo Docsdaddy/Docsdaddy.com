@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DocsDaddy | Image Compressor</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f7faff;
+      color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    main {
+      width: 90%;
+      max-width: 600px;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    h2 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .upload-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px dashed #007bff;
+      border-radius: 12px;
+      padding: 2rem;
+      background: #f0f6ff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .upload-section:hover {
+      background: #e6f0ff;
+    }
+
+    .upload-section input {
+      display: none;
+    }
+
+    .size-input {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5rem;
+      gap: 0.5rem;
+    }
+
+    .size-input input {
+      width: 100px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      text-align: center;
+    }
+
+    .size-input select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: white;
+    }
+
+    button {
+      margin-top: 1.8rem;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #005fcc;
+      transform: scale(1.03);
+    }
+
+    .preview {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-section {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .download-section a {
+      color: #007bff;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 1.2rem;
+      }
+      header {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>DocsDaddy Image Compressor</header>
+
+  <main>
+    <h2>Compress Your Image</h2>
+
+    <label class="upload-section" for="imageInput">
+      <span>📁 Click or Drop Image Here</span>
+      <input type="file" id="imageInput" accept="image/*" />
+    </label>
+
+    <div class="size-input">
+      <label for="targetSize">Target Size:</label>
+      <input type="number" id="targetSize" placeholder="500" />
+      <select id="sizeUnit">
+        <option value="KB">KB</option>
+        <option value="MB">MB</option>
+      </select>
+    </div>
+
+    <button id="compressBtn">Compress Image</button>
+
+    <div class="preview" id="previewSection" style="display:none;">
+      <h3>Preview:</h3>
+      <img id="previewImage" src="#" alt="Preview" />
+    </div>
+
+    <div class="download-section" id="downloadSection" style="display:none;">
+      <a id="downloadLink" href="#" download="compressed-image.jpg">⬇ Download Compressed Image</a>
+    </div>
+  </main>
+
+  <footer>© 2025 DocsDaddy. All Rights Reserved.</footer>
+
+  <script>
+    const imageInput = document.getElementById("imageInput");
+    const previewSection = document.getElementById("previewSection");
+    const previewImage = document.getElementById("previewImage");
+    const compressBtn = document.getElementById("compressBtn");
+    const targetSize = document.getElementById("targetSize");
+    const sizeUnit = document.getElementById("sizeUnit");
+    const downloadSection = document.getElementById("downloadSection");
+    const downloadLink = document.getElementById("downloadLink");
+
+    let originalImage;
+
+    imageInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        previewImage.src = event.target.result;
+        previewSection.style.display = "block";
+        originalImage = new Image();
+        originalImage.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    compressBtn.addEventListener("click", async () => {
+      if (!originalImage || !targetSize.value) {
+        alert("Please upload an image and enter a target size.");
+        return;
+      }
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = originalImage.width;
+      canvas.height = originalImage.height;
+      ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+
+      let quality = 0.9;
+      let compressedBlob;
+      const targetBytes =
+        sizeUnit.value === "KB"
+          ? targetSize.value * 1024
+          : targetSize.value * 1024 * 1024;
+
+      do {
+        compressedBlob = await new Promise((resolve) =>
+          canvas.toBlob(resolve, "image/jpeg", quality)
+        );
+        if (compressedBlob.size <= targetBytes || quality < 0.1) break;
+        quality -= 0.05;
+      } while (true);
+
+      const compressedUrl = URL.createObjectURL(compressedBlob);
+      previewImage.src = compressedUrl;
+      downloadLink.href = compressedUrl;
+      downloadSection.style.display = "block";
+    });
+  </script>
+</body>
+</html>
