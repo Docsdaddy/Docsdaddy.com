@@ -3,234 +3,238 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DocsDaddy — Compress Image</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>DocsDaddy — All Your Document Tools</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/your_kit_id.js" crossorigin="anonymous"></script>
+  <!-- If you don't have a kit replace the script with:
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  -->
+
   <style>
     :root{
-      --primary:#0066FF; --bg:#F7F8FA; --card:#fff; --text:#1A1A1A; --muted:#6B7280;
-      --radius:12px;
+      --primary:#0066FF;
+      --bg:#F7F8FA;
+      --card:#FFFFFF;
+      --text:#1A1A1A;
+      --muted:#6B7280;
+      --accent:#FFB400;
+      --radius:14px;
+      --container:1100px;
     }
     *{box-sizing:border-box}
-    body{font-family:"Poppins",sans-serif;margin:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh}
-    .topbar{background:var(--primary);color:white;padding:14px 20px;display:flex;align-items:center;gap:12px}
-    .topbar .brand{font-weight:700}
-    .container{width:95%;max-width:820px;margin:22px auto;background:var(--card);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(2,30,80,0.06)}
-    h1{color:var(--primary);margin:0 0 8px 0}
-    p.lead{margin:0;color:var(--muted)}
+    html,body{height:100%}
+    body{
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      margin:0; background:var(--bg); color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;flex-direction:column;align-items:center;
+    }
 
-    .uploader{margin-top:18px;border:2px dashed rgba(0,102,255,0.18);border-radius:12px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px;background:#F5FAFF}
-    .uploader input{display:none}
-    .uploader .hint{color:var(--muted);font-size:14px}
+    .site {
+      width:100%; max-width:var(--container); padding:28px;
+    }
 
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
-    .controls input[type="number"]{width:120px;padding:8px;border-radius:8px;border:1px solid #e0e6f2;text-align:center}
-    .controls select{padding:8px;border-radius:8px;border:1px solid #e0e6f2}
+    header{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);
+    }
+    .logo {
+      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#4aa1ff);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
+      box-shadow: 0 6px 20px rgba(3, 102, 255, 0.12);
+      font-size:18px;
+    }
+    .brand h1{font-size:18px;margin:0}
+    nav{display:flex;gap:12px;align-items:center}
+    .nav-link {color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px}
+    .nav-link:hover{background:rgba(0,0,0,0.04);color:var(--text)}
 
-    button.primary{background:var(--primary);color:white;padding:10px 14px;border-radius:10px;border:0;font-weight:600;cursor:pointer}
-    button.secondary{background:white;border:1px solid #e6eefc;padding:10px 14px;border-radius:10px;cursor:pointer}
+    .cta {
+      background:var(--primary); color:white; padding:10px 16px; border-radius:10px; text-decoration:none;
+      box-shadow: 0 6px 18px rgba(0,102,255,0.12); font-weight:600;
+    }
 
-    .preview-area{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-    .preview-card{background:#FAFAFF;padding:12px;border-radius:10px;text-align:center;border:1px solid #f0f4ff}
-    .preview-card img{max-width:100%;border-radius:8px;display:block;margin:10px auto}
+    /* Hero */
+    .hero{
+      margin-top:26px;
+      background:linear-gradient(180deg, rgba(0,102,255,0.06), transparent);
+      border-radius:16px;padding:28px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;
+    }
+    .hero-left{flex:1;min-width:240px}
+    .hero h2{margin:0 0 8px 0;color:var(--primary);font-size:26px}
+    .hero p{margin:0;color:var(--muted)}
+    .hero-actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn-outline {padding:10px 14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:white;color:var(--text);text-decoration:none}
+    .hero-visual{width:320px;max-width:40%;min-width:220px}
 
-    .download{margin-top:14px;text-align:center}
-    .muted{color:var(--muted);font-size:13px}
+    /* Tools grid */
+    .tools {margin-top:20px; display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+    .card {
+      background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:0 8px 24px rgba(14,30,37,0.04);
+      display:flex;flex-direction:column;gap:12px;align-items:flex-start;transition:transform .18s,box-shadow .18s;cursor:pointer;
+    }
+    .card:hover{transform:translateY(-6px); box-shadow:0 18px 40px rgba(3,102,255,0.08)}
+    .card .icon{
+      width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg, rgba(0,102,255,0.08), rgba(0,102,255,0.02));
+      display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--primary);
+    }
+    .card h3{margin:0;font-size:16px}
+    .card p{margin:0;color:var(--muted);font-size:13px}
 
-    @media (max-width:760px){ .preview-area{grid-template-columns:1fr} .controls{flex-direction:column;align-items:stretch} }
+    /* Responsive */
+    @media (max-width:1000px){ .tools{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:640px){ 
+      .site{padding:16px}
+      .hero{flex-direction:column;align-items:flex-start}
+      .hero-visual{width:100%;max-width:none}
+      .tools{grid-template-columns:1fr}
+      header{flex-direction:column;align-items:flex-start;gap:14px}
+    }
+
+    .footer{margin:28px 0;color:var(--muted);font-size:13px;text-align:center}
   </style>
 </head>
 <body>
+  <div class="site">
 
-  <div class="topbar">
-    <div class="brand">DocsDaddy</div>
-    <div style="margin-left:auto;color:rgba(255,255,255,0.9);font-size:14px">Image Compressor</div>
+    <header>
+      <a class="brand" href="index.html">
+        <div class="logo">DD</div>
+        <div>
+          <h1>DocsDaddy</h1>
+          <div style="font-size:12px;color:var(--muted)">Smart, Simple & Free Document Tools</div>
+        </div>
+      </a>
+
+      <nav>
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="compress-image.html">Tools</a>
+        <a class="nav-link" href="#about">About</a>
+        <a class="nav-link" href="#contact">Contact</a>
+        <a class="cta" href="#tools-grid">Explore Tools</a>
+      </nav>
+    </header>
+
+    <section class="hero" role="region" aria-label="DocsDaddy hero">
+      <div class="hero-left">
+        <h2>All Your Document Tools in One Place</h2>
+        <p>Compress, convert, edit and manage PDFs and images easily — free and privacy-first. No signups, no uploads to server — everything runs in your browser.</p>
+        <div class="hero-actions">
+          <a class="cta" href="#tools-grid">Explore Tools</a>
+          <a class="btn-outline" href="#about">Learn More</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <!-- simple illustrative SVG -->
+        <svg width="100%" height="100%" viewBox="0 0 360 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:12px">
+          <rect x="0" y="0" width="360" height="220" rx="12" fill="white" stroke="rgba(0,0,0,0.03)"/>
+          <g transform="translate(18,20)">
+            <rect x="0" y="0" width="120" height="160" rx="8" fill="#F0F6FF"/>
+            <rect x="140" y="6" width="200" height="30" rx="6" fill="#EAF4FF"/>
+            <rect x="140" y="46" width="200" height="30" rx="6" fill="#EAF4FF"/>
+            <rect x="140" y="86" width="120" height="20" rx="6" fill="#EAF4FF"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <main id="tools-grid">
+      <h2 style="color:var(--primary);margin:18px 0 10px 0">Tools</h2>
+      <p style="margin:0 0 16px 0;color:var(--muted)">Tap any tool to open it. All tools are built to run client-side for privacy.</p>
+
+      <div class="tools" role="list">
+        <!-- Compress Tools -->
+        <div class="card" role="listitem" onclick="location.href='compress-pdf.html'">
+          <div class="icon"><i class="fa-solid fa-file-pdf"></i></div>
+          <h3>Compress PDF</h3>
+          <p>Reduce PDF file size quickly and download the optimized file.</p>
+        </div>
+
+        <div class="card" role="listitem" onclick="location.href='compress-image.html'">
+          <div class="icon"><i class="fa-solid fa-file-image"></i></div>
+          <h3>Compress Image</h3>
+          <p>Compress JPG/PNG/WebP images to a target size (KB/MB) and download.</p>
+        </div>
+
+        <div class="card" role="listitem" onclick="location.href='image-resizer.html'">
+          <div class="icon"><i class="fa-solid fa-expand"></i></div>
+          <h3>Image Resizer</h3>
+          <p>Resize images by dimensions while keeping aspect ratio intact.</p>
+        </div>
+
+        <!-- Convert Tools -->
+        <div class="card" role="listitem" onclick="alert('Coming soon: PDF → WORD')">
+          <div class="icon"><i class="fa-solid fa-file-word"></i></div>
+          <h3>PDF to WORD</h3>
+          <p>Extract editable DOCX from PDFs (server integration optional).</p>
+        </div>
+
+        <div class="card" role="listitem" onclick="alert('Coming soon: WORD → PDF')">
+          <div class="icon"><i class="fa-solid fa-file-lines"></i></div>
+          <h3>WORD to PDF</h3>
+          <p>Quickly convert .docx files to PDF format.</p>
+        </div>
+
+        <div class="card" role="listitem" onclick="alert('Coming soon: PowerPoint → PDF')">
+          <div class="icon"><i class="fa-solid fa-file-powerpoint"></i></div>
+          <h3>PowerPoint to PDF</h3>
+          <p>Convert PPTX slides into a single PDF document.</p>
+        </div>
+
+        <!-- Organize Tools -->
+        <div class="card" role="listitem" onclick="alert('Coming soon: Merge PDF')">
+          <div class="icon"><i class="fa-solid fa-object-group"></i></div>
+          <h3>Merge PDF</h3>
+          <p>Combine multiple PDFs into one document (client-side where possible).</p>
+        </div>
+
+        <div class="card" role="listitem" onclick="alert('Coming soon: Split PDF')">
+          <div class="icon"><i class="fa-solid fa-split"></i></div>
+          <h3>Split PDF</h3>
+          <p>Split a large PDF into multiple smaller files.</p>
+        </div>
+
+        <div class="card" role="listitem" onclick="alert('Coming soon: PDF Editor')">
+          <div class="icon"><i class="fa-solid fa-pen-to-square"></i></div>
+          <h3>PDF Editor</h3>
+          <p>Edit PDF pages, add annotations and fill forms.</p>
+        </div>
+
+      </div>
+    </main>
+
+    <section id="about" style="margin-top:26px">
+      <h3>About DocsDaddy</h3>
+      <p style="color:var(--muted);max-width:820px">DocsDaddy aims to simplify your digital document workflow with privacy-first, fast and free tools that run in the browser. No accounts required — just drop files and act.</p>
+    </section>
+
+    <footer class="footer">
+      © 2025 DocsDaddy — Privacy-first tools. &nbsp; • &nbsp;
+      <a href="#" style="color:var(--primary);text-decoration:none">Privacy Policy</a>
+    </footer>
   </div>
 
-  <div class="container" role="main">
-    <h1>Compress Image</h1>
-    <p class="lead">Upload an image, set a desired file size (KB/MB), compress in the browser and download — privacy-first.</p>
-
-    <label class="uploader" id="dropArea" for="fileInput">
-      <div style="font-weight:600">📁 Click or drop an image here</div>
-      <div class="hint">JPG / PNG / WebP — max 100MB</div>
-      <input id="fileInput" type="file" accept="image/*" />
-    </label>
-
-    <div class="controls">
-      <div>
-        <label class="muted">Target size</label><br/>
-        <input id="targetSize" type="number" placeholder="500" />
-      </div>
-      <div>
-        <label class="muted">Unit</label><br/>
-        <select id="unit">
-          <option value="KB">KB</option>
-          <option value="MB">MB</option>
-        </select>
-      </div>
-
-      <div style="margin-left:auto;display:flex;gap:8px">
-        <button id="btnReset" class="secondary">Reset</button>
-        <button id="btnCompress" class="primary">Compress</button>
-      </div>
-    </div>
-
-    <div class="preview-area" id="previews" aria-live="polite" style="display:none">
-      <div class="preview-card">
-        <strong>Original</strong>
-        <div id="origInfo" class="muted">—</div>
-        <img id="origImg" alt="Original preview" />
-      </div>
-      <div class="preview-card">
-        <strong>Compressed</strong>
-        <div id="compInfo" class="muted">—</div>
-        <img id="compImg" alt="Compressed preview" />
-      </div>
-    </div>
-
-    <div class="download" id="downloadWrap" style="display:none">
-      <a id="downloadLink" class="primary" style="text-decoration:none;padding:10px 16px;border-radius:10px;color:white;display:inline-block">⬇ Download Compressed Image</a>
-      <div class="muted" style="margin-top:8px">Tip: If target size is unreachable without heavy quality loss, the tool will provide the best compressed result.</div>
-    </div>
-  </div>
-
+  <!-- Small script to gracefully fallback if FontAwesome kit not configured -->
   <script>
-    const fileInput = document.getElementById('fileInput');
-    const dropArea = document.getElementById('dropArea');
-    const origImg = document.getElementById('origImg');
-    const compImg = document.getElementById('compImg');
-    const previews = document.getElementById('previews');
-    const origInfo = document.getElementById('origInfo');
-    const compInfo = document.getElementById('compInfo');
-    const btnCompress = document.getElementById('btnCompress');
-    const btnReset = document.getElementById('btnReset');
-    const targetSizeEl = document.getElementById('targetSize');
-    const unitEl = document.getElementById('unit');
-    const downloadWrap = document.getElementById('downloadWrap');
-    const downloadLink = document.getElementById('downloadLink');
-
-    let originalFile = null, originalDataUrl = null;
-
-    // drag-drop support
-    ;['dragenter','dragover','dragleave','drop'].forEach(evt => {
-      dropArea.addEventListener(evt, e => e.preventDefault());
+    // If icons fail to load, we can swap text icons (very small fallback)
+    document.addEventListener("DOMContentLoaded", () => {
+      const icons = document.querySelectorAll('.icon i');
+      icons.forEach(i => {
+        const style = window.getComputedStyle(i);
+        if (style.display === 'none') {
+          // fallback: put first letter
+          i.style.display = 'none';
+          i.parentElement.insertAdjacentHTML('beforeend', '<div style="font-weight:700;color:var(--primary)">'+ (i.className.split('-').pop().charAt(0) || 'D') +'</div>');
+        }
+      });
     });
-
-    dropArea.addEventListener('drop', e => {
-      const f = e.dataTransfer.files && e.dataTransfer.files[0];
-      if(f) handleFile(f);
-    });
-
-    fileInput.addEventListener('change', e => {
-      const f = e.target.files[0];
-      handleFile(f);
-    });
-
-    function handleFile(file){
-      if(!file) return;
-      originalFile = file;
-      if(!file.type.startsWith('image/')) { alert('Please choose an image file'); return; }
-      const reader = new FileReader();
-      reader.onload = e => {
-        originalDataUrl = e.target.result;
-        origImg.src = originalDataUrl;
-        origInfo.textContent = `${formatBytes(file.size)} — ${file.type}`;
-        previews.style.display = 'grid';
-        downloadWrap.style.display = 'none';
-        compImg.src = '';
-        compInfo.textContent = '—';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    btnReset.addEventListener('click', () => {
-      fileInput.value=''; originalFile=null; originalDataUrl=null;
-      previews.style.display='none'; downloadWrap.style.display='none';
-      origImg.src=''; compImg.src=''; origInfo.textContent='—'; compInfo.textContent='—';
-      targetSizeEl.value='';
-    });
-
-    btnCompress.addEventListener('click', async () => {
-      if(!originalFile || !originalDataUrl){ alert('Please upload an image first'); return; }
-      const sizeNum = Number(targetSizeEl.value);
-      if(!sizeNum || sizeNum <= 0){ alert('Enter a valid target size'); return; }
-      const targetBytes = unitEl.value === 'KB' ? sizeNum * 1024 : sizeNum * 1024 * 1024;
-
-      // create canvas
-      const img = new Image();
-      img.src = originalDataUrl;
-      await img.decode();
-
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      // keep original dimensions — if extremely large, scale down a bit for practicality
-      const MAX_DIM = 3000;
-      let w = img.naturalWidth, h = img.naturalHeight;
-      if(w > MAX_DIM || h > MAX_DIM){
-        const ratio = Math.min(MAX_DIM / w, MAX_DIM / h);
-        w = Math.round(w * ratio);
-        h = Math.round(h * ratio);
-      }
-      canvas.width = w; canvas.height = h;
-      ctx.drawImage(img, 0, 0, w, h);
-
-      // binary search on quality for JPEG encoding
-      let minQ = 0.05, maxQ = 0.95, curQ = maxQ;
-      let blob = await toBlob(canvas, curQ);
-      // if original is already smaller than target, return original
-      if(originalFile.size <= targetBytes){
-        compImg.src = originalDataUrl;
-        compInfo.textContent = `${formatBytes(originalFile.size)} (original)`;
-        downloadWrap.style.display = 'block';
-        downloadLink.href = originalDataUrl;
-        downloadLink.download = `docsdaddy-compressed${getExtFromType(originalFile.type)}`;
-        return;
-      }
-
-      // search
-      for(let i=0;i<12;i++){
-        if(blob.size <= targetBytes * 1.02) break; // within 2% tolerance
-        // reduce quality
-        const ratio = targetBytes / blob.size;
-        // heuristically shrink q
-        curQ = Math.max(minQ, curQ * Math.sqrt(ratio));
-        blob = await toBlob(canvas, curQ);
-      }
-
-      // if still larger, try scaling down dimensions progressively
-      let attempts = 0;
-      while(blob.size > targetBytes && attempts < 6){
-        attempts++;
-        // scale down 0.85 each attempt
-        const scale = Math.pow(0.85, attempts);
-        const nw = Math.max(100, Math.round(w * scale));
-        const nh = Math.max(100, Math.round(h * scale));
-        canvas.width = nw; canvas.height = nh;
-        ctx.clearRect(0,0,nw,nh);
-        ctx.drawImage(img,0,0,nw,nh);
-        blob = await toBlob(canvas, Math.max(0.4, curQ * 0.9));
-      }
-
-      const url = URL.createObjectURL(blob);
-      compImg.src = url;
-      compInfo.textContent = `${formatBytes(blob.size)} — final`;
-      downloadWrap.style.display = 'block';
-      downloadLink.href = url;
-      downloadLink.download = `docsdaddy-compressed${getExtFromType(originalFile.type)}`;
-    });
-
-    function toBlob(canvas, quality=0.9){
-      return new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
-    }
-
-    function formatBytes(bytes){
-      if(bytes < 1024) return bytes + ' B';
-      if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
-      return (bytes/(1024*1024)).toFixed(2) + ' MB';
-    }
-
-    function getExtFromType(type){ return type.includes('png')?'.png':'.jpg' }
   </script>
 </body>
 </html>
