@@ -1,230 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Docs Daddy - Image Compressor</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f6fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: #fff;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 400px;
-      position: relative;
-    }
-    h2 {
-      color: #333;
-      margin-bottom: 15px;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-      width: 100%;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    a#downloadLink {
-      display: none;
-      margin-top: 15px;
-      text-decoration: none;
-      color: white;
-      background: #28a745;
-      padding: 10px 20px;
-      border-radius: 8px;
-      display: inline-block;
-    }
-    a#downloadLink:hover {
-      background: #218838;
-    }
-    img {
-      max-width: 100%;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
-    .progress {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #555;
-    }
-    .drop-zone {
-      border: 2px dashed #aaa;
-      border-radius: 10px;
-      padding: 20px;
-      color: #777;
-      font-size: 14px;
-      margin-top: 10px;
-      cursor: pointer;
-      transition: border-color 0.3s, background-color 0.3s;
-    }
-    .drop-zone.dragover {
-      border-color: #007bff;
-      background-color: #e9f3ff;
-      color: #007bff;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DocsDaddy — Image Compressor</title>
+
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
+
+<style>
+:root{--accent:#0066ff;--bg:#f8fbff}
+body{font-family:"Inter",Arial,sans-serif;background:var(--bg);margin:0;padding:40px;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.card{background:#fff;max-width:960px;width:100%;padding:24px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.08)}
+h1{margin:0;font-size:24px;color:#111}
+.muted{color:#666;font-size:14px;margin-top:4px}
+.drop{border:2px dashed #d1e0ff;border-radius:10px;padding:30px;text-align:center;background:#f3f7ff;cursor:pointer;transition:all .2s}
+.drop.drag{background:#e0ecff;border-color:var(--accent);transform:scale(1.02)}
+input[type=file]{display:none}
+.controls{display:flex;gap:10px;margin-top:14px;align-items:center}
+select,button{padding:10px 12px;border-radius:8px;border:1px solid #e6e6e6;font-size:14px}
+button{background:var(--accent);color:white;cursor:pointer;border:none}
+.progress{margin-top:12px;height:10px;background:#eef3ff;border-radius:6px;overflow:hidden;display:none}
+.bar{height:100%;background:linear-gradient(90deg,var(--accent),#00c6ff);width:0;transition:width .3s}
+.status{margin-top:10px;padding:10px;border-radius:8px;display:none;font-size:14px}
+.status.info{background:#eef6ff;color:#033b8a}
+.status.success{background:#ecfdf5;color:#046c4e}
+.status.error{background:#fef2f2;color:#9b1c1c}
+.preview{margin-top:14px;border:1px solid #eaeaea;border-radius:8px;padding:10px;min-height:160px;display:flex;align-items:center;justify-content:center;background:#fafcff}
+img.preview-img{max-width:100%;max-height:220px;border-radius:6px}
+.results{margin-top:18px;display:none}
+.download{background:#00b982;color:white;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:500}
+.chips{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.chip{background:#f2f4f8;padding:6px 10px;border-radius:20px;font-size:13px;color:#333}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>Docs Daddy Image Compressor</h2>
+<div class="card">
+  <h1>DocsDaddy — Image Compressor</h1>
+  <div class="muted">Compress Images — 100% client-side. Safe, fast, and simple.</div>
 
-    <input type="file" id="imageInput" accept="image/*" hidden>
-    <div class="drop-zone" id="dropZone">📁 Drag & Drop your image here or click to upload</div>
-
-    <div>
-      <input type="number" id="targetSize" placeholder="Enter target size" />
-      <select id="unit">
-        <option value="KB">KB</option>
-        <option value="MB">MB</option>
-      </select>
-    </div>
-
-    <button id="compressBtn">Compress Image</button>
-    <div class="progress" id="progressText"></div>
-    <a id="downloadLink">Download Compressed Image</a>
-    <img id="preview" src="" alt="Preview" />
+  <div id="dropZone" class="drop">
+    <div style="font-size:32px;color:var(--accent)">📄</div>
+    <div><b>Drag & Drop</b> or Click to Upload your document</div>
+    <div class="muted">Supported: .pdf, .docx, .pptx, .xlsx, images</div>
+    <input id="fileInput" type="file" accept=".pdf,.docx,.pptx,.xlsx,.jpg,.jpeg,.png,.webp">
   </div>
 
-  <script>
-    const imageInput = document.getElementById('imageInput');
-    const dropZone = document.getElementById('dropZone');
-    const targetSizeInput = document.getElementById('targetSize');
-    const unitSelect = document.getElementById('unit');
-    const compressBtn = document.getElementById('compressBtn');
-    const progressText = document.getElementById('progressText');
-    const downloadLink = document.getElementById('downloadLink');
-    const preview = document.getElementById('preview');
+  <div class="controls">
+    <label>Compression Level:</label>
+    <select id="level">
+      <option value="0.75">75% (Light)</option>
+      <option value="0.50" selected>50% (Medium)</option>
+      <option value="0.35">35% (High)</option>
+    </select>
+    <button id="startBtn">Start Compression</button>
+  </div>
 
-    let originalFile;
+  <div class="progress" id="progress"><div class="bar" id="bar"></div></div>
+  <div id="status" class="status info"></div>
+  <div id="preview" class="preview"><span class="muted">No file selected</span></div>
 
-    // Handle click on drop zone to trigger file input
-    dropZone.addEventListener('click', () => imageInput.click());
+  <div class="results" id="results">
+    <div class="chips">
+      <div class="chip">Original: <span id="origSize">-</span></div>
+      <div class="chip">Compressed: <span id="resultSize">-</span></div>
+      <div class="chip">Level: <span id="targetLevel">-</span></div>
+    </div>
+    <div style="margin-top:10px">
+      <a id="downloadLink" class="download" href="#">⬇ Download Compressed File</a>
+    </div>
+  </div>
+</div>
 
-    // Handle file input change
-    imageInput.addEventListener('change', (event) => handleFile(event.target.files[0]));
+<script>
+const dropZone=document.getElementById('dropZone');
+const fileInput=document.getElementById('fileInput');
+const startBtn=document.getElementById('startBtn');
+const levelSelect=document.getElementById('level');
+const statusEl=document.getElementById('status');
+const progressEl=document.getElementById('progress');
+const barEl=document.getElementById('bar');
+const preview=document.getElementById('preview');
+const results=document.getElementById('results');
+const origSize=document.getElementById('origSize');
+const resultSize=document.getElementById('resultSize');
+const targetLevel=document.getElementById('targetLevel');
+const downloadLink=document.getElementById('downloadLink');
+let currentFile=null, finalBlob=null;
 
-    // Drag and drop events
-    dropZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropZone.classList.add('dragover');
-    });
+dropZone.addEventListener('click',()=>fileInput.click());
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag')});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop',e=>{
+  e.preventDefault();dropZone.classList.remove('drag');
+  if(e.dataTransfer.files[0]){fileInput.files=e.dataTransfer.files;onFileChosen();}
+});
+fileInput.addEventListener('change',onFileChosen);
+startBtn.addEventListener('click',()=>{
+  if(!currentFile)return showStatus('Please select a file first','error');
+  compressFile(currentFile,parseFloat(levelSelect.value));
+});
 
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.classList.remove('dragover');
-    });
+function onFileChosen(){
+  const f=fileInput.files[0]; if(!f)return;
+  currentFile=f; preview.innerHTML='';
+  preview.innerHTML=`<div class="muted">${f.name} — ${formatBytes(f.size)}</div>`;
+  results.style.display='none';
+  if(f.type.startsWith('image/')){
+    const img=document.createElement('img'); img.src=URL.createObjectURL(f); img.className='preview-img';
+    img.onload=()=>URL.revokeObjectURL(img.src); preview.innerHTML=''; preview.appendChild(img);
+  }
+}
 
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
-      if (file) handleFile(file);
-    });
+function showStatus(msg,type='info'){
+  statusEl.style.display='block'; statusEl.className='status '+type; statusEl.innerText=msg;
+}
+function setProgress(p){progressEl.style.display='block';barEl.style.width=p+'%';if(p>=100)setTimeout(()=>progressEl.style.display='none',600);}
 
-    // Process selected image
-    function handleFile(file) {
-      if (!file.type.startsWith('image/')) {
-        alert('Please upload a valid image file.');
-        return;
-      }
-      originalFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        preview.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      dropZone.textContent = `✅ Selected: ${file.name}`;
+async function compressFile(file,level){
+  showStatus('Processing...','info'); setProgress(10);
+  const ext=file.name.split('.').pop().toLowerCase();
+  const orig=file.size;
+  let blob=null;
+
+  try{
+    if(['docx','pptx','xlsx'].includes(ext)) blob=await compressOfficeSmart(file,level);
+    else if(ext==='pdf') blob=await compressPDFSmart(file,level);
+    else if(file.type.startsWith('image/')) blob=await compressImageSmart(file,level);
+    else throw new Error('Unsupported file type.');
+
+    if(!blob) throw new Error('Compression failed.');
+    finalBlob=blob;
+    origSize.innerText=formatBytes(orig);
+    resultSize.innerText=formatBytes(blob.size);
+    targetLevel.innerText=(level*100).toFixed(0)+'%';
+    downloadLink.href=URL.createObjectURL(blob);
+    downloadLink.download=file.name.replace(/\.[^.]+$/,'_compressed.$&');
+    results.style.display='block';
+    showStatus('Compression complete!','success'); setProgress(100);
+  }catch(e){
+    console.error(e);
+    showStatus('Error: '+e.message,'error');
+    setProgress(0);
+  }
+}
+
+/* Smart Office compressor: better compression and fixed corruption */
+async function compressOfficeSmart(file,level){
+  const ab=await file.arrayBuffer();
+  const zip=await JSZip.loadAsync(ab);
+  const newZip=new JSZip();
+  const mediaPaths=[];
+
+  zip.forEach((path,entry)=>{
+    const lower=path.toLowerCase();
+    if(!entry.dir && (lower.includes('/media/') || lower.endsWith('.png')||lower.endsWith('.jpg'))) mediaPaths.push(path);
+  });
+
+  let quality=level>=0.75?0.9:level>=0.5?0.75:0.55;
+  const replacements={};
+
+  for(const path of mediaPaths){
+    const data=await zip.file(path).async('arraybuffer');
+    const blob=await compressImageBufferAdaptive(data,quality);
+    replacements[path]=blob||new Blob([data]);
+  }
+
+  zip.forEach(async (path,entry)=>{
+    if(entry.dir)return;
+    if(replacements[path]) newZip.file(path,await replacements[path].arrayBuffer());
+    else{
+      const arr=await entry.async('arraybuffer');
+      newZip.file(path,arr,{binary:true});
     }
+  });
 
-    // Compress image
-    compressBtn.addEventListener('click', async () => {
-      if (!originalFile) {
-        alert('Please upload an image first.');
-        return;
-      }
+  const arr=await newZip.generateAsync({type:'arraybuffer',compression:'DEFLATE',compressionOptions:{level:9}});
+  return new Blob([arr],{type:file.type||'application/vnd.openxmlformats-officedocument'});
+}
 
-      let targetSize = parseFloat(targetSizeInput.value);
-      const unit = unitSelect.value;
-      if (isNaN(targetSize) || targetSize <= 0) {
-        alert('Please enter a valid size.');
-        return;
-      }
+/* PDF compressor */
+async function compressPDFSmart(file,level){
+  const arr=await file.arrayBuffer();
+  try{
+    const pdfDoc=await PDFLib.PDFDocument.load(arr);
+    const saved=await pdfDoc.save({useObjectStreams:true});
+    if(saved.byteLength<file.size*level)return new Blob([saved],{type:'application/pdf'});
+  }catch(e){console.warn('pdf-lib fast compress failed',e);}
+  const pdfjs=window['pdfjs-dist/build/pdf'];
+  pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.worker.min.js';
+  const pdf=await pdfjs.getDocument({data:arr}).promise;
+  const out=await PDFLib.PDFDocument.create();
+  for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const vp=page.getViewport({scale:0.9});
+    const canvas=document.createElement('canvas');
+    canvas.width=vp.width; canvas.height=vp.height;
+    const ctx=canvas.getContext('2d'); await page.render({canvasContext:ctx,viewport:vp}).promise;
+    const blob=await canvasToBlob(canvas,'image/jpeg',level>=0.75?0.9:level>=0.5?0.7:0.5);
+    const bytes=await blob.arrayBuffer(); const img=await out.embedJpg(bytes);
+    const p=out.addPage([img.width,img.height]); p.drawImage(img,{x:0,y:0,width:img.width,height:img.height});
+  }
+  const saved=await out.save(); return new Blob([saved],{type:'application/pdf'});
+}
 
-      // Convert to bytes
-      if (unit === 'MB') targetSize *= 1024 * 1024;
-      else targetSize *= 1024;
+/* Image */
+async function compressImageSmart(file,level){
+  const ab=await file.arrayBuffer();
+  return await compressImageBufferAdaptive(ab,level>=0.75?0.9:level>=0.5?0.75:0.55);
+}
 
-      progressText.textContent = 'Compressing... please wait.';
+/* Adaptive image compressor */
+async function compressImageBufferAdaptive(ab,quality){
+  const blob=new Blob([ab]); const url=URL.createObjectURL(blob);
+  const img=await loadImage(url); URL.revokeObjectURL(url);
+  const canvas=document.createElement('canvas');
+  const maxW=1200; const scale=Math.min(1,maxW/img.width);
+  canvas.width=img.width*scale; canvas.height=img.height*scale;
+  const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  return await canvasToBlob(canvas,'image/jpeg',quality);
+}
 
-      const compressedBlob = await compressImage(originalFile, targetSize);
-      if (!compressedBlob) {
-        progressText.textContent = 'Compression failed. Try again with a smaller size.';
-        return;
-      }
-
-      const downloadUrl = URL.createObjectURL(compressedBlob);
-      downloadLink.href = downloadUrl;
-      downloadLink.download = originalFile.name;
-      downloadLink.style.display = 'inline-block';
-      progressText.textContent = `Compressed size: ${(compressedBlob.size / 1024).toFixed(2)} KB`;
-    });
-
-    // Compression logic
-    async function compressImage(file, targetSizeBytes) {
-      const img = document.createElement('img');
-      const reader = new FileReader();
-
-      return new Promise((resolve) => {
-        reader.onload = function(e) {
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-
-          let quality = 0.9;
-          const step = 0.05;
-
-          (function tryCompress() {
-            canvas.toBlob((blob) => {
-              if (blob.size <= targetSizeBytes || quality <= 0.1) {
-                resolve(blob);
-                return;
-              }
-              quality -= step;
-              tryCompress();
-            }, file.type, quality);
-          })();
-        };
-      });
-    }
-  </script>
+/* Helpers */
+function canvasToBlob(canvas,type,quality){return new Promise(r=>canvas.toBlob(b=>r(b),type,quality));}
+function loadImage(url){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url;});}
+function formatBytes(n){return n<1024?n+'B':n<1048576?(n/1024).toFixed(1)+'KB':(n/1048576).toFixed(2)+'MB';}
+</script>
 </body>
 </html>
